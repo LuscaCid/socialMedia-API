@@ -10,14 +10,34 @@ class UsersControllers {
         res.json()
     }
 
+    async updateEmailUsername(req,res) {
+        const { id } = req.query
+        const {
+            newEmail,
+            newUsername,
+        } = req.body
+        
+        const existsEmail = await knex('users')
+        .select('email')
+        .where({email : newEmail})
+        .first()
+        console.log(existsEmail)
+        if(existsEmail) throw new AppError('email já utilizado')
+        const user = await knex('users')
+        .where({id})
+        .update({
+            name : newUsername,
+            email : newEmail
+        })
+        res.status(200).json(user)
+    }
+
     async updatePassword (req, res){
         const {id} = req.query
         const {
             oldPassword,
             newPassword
         } = req.body 
-
-        
         const actualPassword = await knex('users')
         .select('password', 'id')
         .where({id})
@@ -67,8 +87,6 @@ class UsersControllers {
             throw new AppError('email cadastrado')
 
         }
-
-        
     }
 }
 module.exports = UsersControllers
