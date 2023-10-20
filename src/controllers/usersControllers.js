@@ -51,7 +51,7 @@ class UsersControllers {
         console.log(oldPassword)
 
         const checkedPassword = await bcrypt.compare(oldPassword, actualPassword.password )
-
+        //importante lembrar que no primeiro parâmetro se passa a senha unhased e no segundo, o hash para transcrever 
         if(checkedPassword) {
             const hashedNewPassword = await bcrypt.hash(newPassword, 8)
             const user_id = await knex("users")
